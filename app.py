@@ -136,8 +136,9 @@ st.markdown("""
 
 # --- HLAVNÁ APLIKÁCIA ---
 
-st.title("Nebo vol. 4: 30.1.-1.2.2026")
-st.write("Daj si za jeden na zdravie. Potom klikni na toto tlačidlo a zisti, čo budeš hrať najbližšie dni.")
+st.title("Nebo vol. 4")
+st.title("30.1.-1.2.2026")
+st.write("Daj si za jeden na zdravie.")
 
 st.divider()
 st.write("") 
@@ -147,7 +148,7 @@ if 'chosen_char' not in st.session_state:
 
 # --- TLAČIDLO "SPIN" ---
 # DÔLEŽITÉ: use_container_width=True roztiahne tlačidlo natívne cez Python
-if st.button("🌀 CHOOSE YOUR PATH 🌀", use_container_width=True):
+if st.button("🌀 Takže čo mám hrať?! 🌀", use_container_width=True):
     with st.spinner("Pripájam sa k Dračiemu Bohu..."):
         time.sleep(0.8)
     
