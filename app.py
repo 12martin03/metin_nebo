@@ -57,7 +57,7 @@ CHARACTERS = {
 # --- CSS ŠTÝLY (Centering Magic) ---
 st.markdown("""
 <style>
-    /* 1. Vycentrovanie všetkých textov a nadpisov */
+    /* 1. Vycentrovanie textov */
     .block-container {
         text-align: center;
     }
@@ -66,7 +66,6 @@ st.markdown("""
     }
     
     /* 2. Vycentrovanie obrázkov */
-    /* Toto zabezpečí, že každý obrázok v aplikácii bude v strede */
     div[data-testid="stImage"] {
         display: flex;
         justify-content: center;
@@ -81,16 +80,10 @@ st.markdown("""
         filter: drop-shadow(0px 0px 15px rgba(0,0,0,0.6));
     }
 
-    /* 3. Vycentrovanie tlačidla */
-    .stButton {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-    }
-    
+    /* 3. Štýl tlačidla */
+    /* Tlačidlo sa roztiahne na 100% šírky svojho stĺpca */
     .stButton button {
-        width: 80%; 
-        max-width: 500px;
+        width: 100%; 
         height: 80px;
         font-size: 24px;
         font-weight: bold;
@@ -145,19 +138,23 @@ st.write("")
 if 'chosen_char' not in st.session_state:
     st.session_state.chosen_char = None
 
-# --- TLAČIDLO "SPIN" ---
-# Tlačidlo je tu stále. Keď naň klikneš, pregeneruje sa výber.
-if st.button("🌀 CHOOSE YOUR PATH 🌀"):
-    # Efekt čakania
-    with st.spinner("Pripájam sa k Dračiemu Bohu..."):
-        time.sleep(0.8)
-    
-    with st.spinner("Osud vyberá tvoju cestu..."):
-        time.sleep(1.0)
+# --- TLAČIDLO "SPIN" (VYCENTROVANÉ CEZ STĹPCE) ---
+# Toto je tá zmena: Vytvoríme 3 stĺpce. 
+# Ľavý a pravý sú "výplň", stredný je širší a tam dáme tlačidlo.
+col_left, col_center, col_right = st.columns([1, 2, 1])
+
+with col_center:
+    if st.button("🌀 CHOOSE YOUR PATH 🌀"):
+        # Efekt čakania
+        with st.spinner("Pripájam sa k Dračiemu Bohu..."):
+            time.sleep(0.8)
         
-    # Výber novej postavy
-    chosen_name = random.choice(list(CHARACTERS.keys()))
-    st.session_state.chosen_char = chosen_name
+        with st.spinner("Osud vyberá tvoju cestu..."):
+            time.sleep(1.0)
+            
+        # Výber novej postavy
+        chosen_name = random.choice(list(CHARACTERS.keys()))
+        st.session_state.chosen_char = chosen_name
 
 # --- ZOBRAZENIE VÝSLEDKU ---
 if st.session_state.chosen_char:
@@ -166,14 +163,20 @@ if st.session_state.chosen_char:
     
     st.divider()
     
-    # 1. Nadpis (Centrovaný cez CSS triedu char-title)
+    # 1. Nadpis
     st.markdown(f'<div class="char-title" style="color: {char_data["color"]};">{char_name}</div>', unsafe_allow_html=True)
     
-    # 2. Hláška (Centrovaná cez CSS triedu char-quote)
+    # 2. Hláška
     st.markdown(f'<div class="char-quote">"{char_data["quote"]}"</div>', unsafe_allow_html=True)
     
-    # 3. Obrázok (Centrovaný cez CSS pravidlo pre stImage)
+    # 3. Obrázok
     if os.path.exists(char_data["img"]):
         st.image(char_data["img"])
     else:
         st.warning(f"⚠️ Chýba obrázok: `{char_data['img']}`")
+    
+    st.write("") 
+
+# --- PÄTIČKA ---
+st.divider()
+st.caption("Metin2 Destiny Chooser")
