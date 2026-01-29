@@ -184,7 +184,7 @@ st.markdown("""
 # --- HLAVNÁ APLIKÁCIA ---
 
 st.title("Nebo vol. 4")
-st.subheader("30.1.-1.2.2026")
+st.subheader("❤️ 30.1.-1.2.2026 ❤️")
 st.write("Daj si za jeden na zdravie.")
 
 st.divider()
