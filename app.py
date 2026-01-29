@@ -2,6 +2,7 @@ import streamlit as st
 import random
 import time
 import os
+import base64
 
 # --- NASTAVENIE STRÁNKY ---
 st.set_page_config(
@@ -10,8 +11,38 @@ st.set_page_config(
     layout="centered"
 )
 
+# --- FUNKCIE PRE POZADIE ---
+def get_base64_of_bin_file(bin_file):
+    """Pomocná funkcia na prečítanie obrázka do formátu base64"""
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+def set_background(png_file):
+    """Nastaví obrázok ako pozadie stránky"""
+    bin_str = get_base64_of_bin_file(png_file)
+    page_bg_img = f'''
+    <style>
+    /* 1. Nastavenie pozadia pre celú aplikáciu (.stApp) */
+    .stApp {{
+        background-image: url("data:image/png;base64,{bin_str}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }}
+    
+    /* 2. Polopriehľadný box pod obsahom, aby bol text čitateľný */
+    .block-container {{
+        background-color: rgba(255, 255, 255, 0.85); /* Biela s 85% nepriehľadnosťou */
+        border-radius: 20px;
+        padding: 3rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }}
+    </style>
+    '''
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+
 # --- DATA CHARAKTEROV (PNG) ---
-# Tvoje upravené názvy a hlášky
 CHARACTERS = {
     "War - aurák": {
         "img": "war_body.png",
@@ -55,10 +86,26 @@ CHARACTERS = {
     }
 }
 
-# --- CSS ŠTÝLY ---
+# --- APLIKOVANIE POZADIA ---
+# Skúsi načítať background.jpg, ak existuje
+background_file = "background.jpg" 
+if os.path.exists(background_file):
+    set_background(background_file)
+else:
+    # Fallback ak zabudneš nahrať fotku (aby appka nespadla)
+    st.markdown("""
+    <style>
+    .block-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+# --- CSS ŠTÝLY (Zvyšok dizajnu) ---
 st.markdown("""
 <style>
-    /* 1. Zarovnanie textov na stred */
+    /* Zarovnanie textov na stred */
     .block-container {
         text-align: center;
     }
@@ -66,7 +113,7 @@ st.markdown("""
         text-align: center !important;
     }
     
-    /* 2. Zarovnanie obrázkov na stred */
+    /* Zarovnanie obrázkov */
     div[data-testid="stImage"] {
         display: flex;
         justify-content: center;
@@ -82,7 +129,7 @@ st.markdown("""
         filter: drop-shadow(0px 0px 15px rgba(0,0,0,0.6));
     }
 
-    /* 3. TLAČIDLO NA CELÚ ŠÍRKU */
+    /* Tlačidlo na celú šírku */
     .stButton button {
         width: 100% !important;
         height: 80px;
@@ -103,12 +150,12 @@ st.markdown("""
         transform: scale(1.02);
     }
     
-    /* 4. Typografia pre výsledok */
+    /* Typografia výsledku */
     .char-title {
         font-size: 42px;
         font-weight: 800;
         margin-top: 10px;
-        text-shadow: 3px 3px 0px #000000;
+        text-shadow: 2px 2px 0px #000000; /* Jemnejší tieň kvôli bielemu pozadiu */
         letter-spacing: 1px;
         text-align: center;
         animation: fadeIn 1s;
@@ -118,8 +165,8 @@ st.markdown("""
         font-style: italic;
         margin-top: 10px;
         margin-bottom: 50px;
-        color: #dddddd;
-        opacity: 0.8;
+        color: #333333; /* Tmavšia farba, aby to bolo vidno na bielom boxe */
+        opacity: 0.9;
         text-align: center;
         animation: fadeIn 1.5s;
     }
@@ -136,9 +183,8 @@ st.markdown("""
 
 # --- HLAVNÁ APLIKÁCIA ---
 
-# Tvoje nové nadpisy
 st.title("Nebo vol. 4")
-st.subheader("❤️ 30.1.-1.2.2026 ❤️") # Dal som to ako subheader, vyzerá to lepšie pod hlavným
+st.subheader("30.1.-1.2.2026")
 st.write("Daj si za jeden na zdravie.")
 
 st.divider()
@@ -148,7 +194,6 @@ if 'chosen_char' not in st.session_state:
     st.session_state.chosen_char = None
 
 # --- TLAČIDLO "SPIN" ---
-# Tvoj nový text na tlačidle
 if st.button("🌀 Takže čo mám hrať?! 🌀", use_container_width=True):
     with st.spinner("Pripájam sa k Dračiemu Bohu..."):
         time.sleep(0.8)
@@ -163,7 +208,7 @@ if st.button("🌀 Takže čo mám hrať?! 🌀", use_container_width=True):
 if st.session_state.chosen_char:
     char_name = st.session_state.chosen_char
     
-    # BEZPEČNOSTNÁ POISTKA (Aby to nespadlo na KeyError pri zmene názvov)
+    # Bezpečnostná kontrola
     if char_name in CHARACTERS:
         char_data = CHARACTERS[char_name]
         
@@ -175,15 +220,13 @@ if st.session_state.chosen_char:
         else:
             st.warning(f"⚠️ Chýba obrázok: `{char_data['img']}`")
         
-        # Delay pre efekt
         time.sleep(0.5) 
         
-        # 2. TEXT (S oneskorením)
+        # 2. TEXT
         st.markdown(f'<div class="char-title" style="color: {char_data["color"]};">{char_name}</div>', unsafe_allow_html=True)
         st.markdown(f'<div class="char-quote">"{char_data["quote"]}"</div>', unsafe_allow_html=True)
     
     else:
-        # Ak by v pamäti ostal starý názov (napr. Warrior - Telo), resetuje sa to
         st.session_state.chosen_char = None
         st.rerun()
 
