@@ -65,26 +65,31 @@ st.markdown("""
         text-align: center !important;
     }
     
-    /* 2. Vycentrovanie obrázkov (Streamlit ich rád dáva doľava) */
-    [data-testid="stImage"] {
+    /* 2. Vycentrovanie obrázkov */
+    /* Toto zabezpečí, že každý obrázok v aplikácii bude v strede */
+    div[data-testid="stImage"] {
         display: flex;
         justify-content: center;
         align-items: center;
+        width: 100%;
     }
-    img {
+    
+    div[data-testid="stImage"] > img {
         margin: 0 auto;
         max-height: 600px;
         object-fit: contain;
         filter: drop-shadow(0px 0px 15px rgba(0,0,0,0.6));
     }
 
-    /* 3. Štýl tlačidla */
+    /* 3. Vycentrovanie tlačidla */
     .stButton {
         display: flex;
         justify-content: center;
+        width: 100%;
     }
+    
     .stButton button {
-        width: 80%; /* Tlačidlo nebude úplne roztiahnuté, ale pekné v strede */
+        width: 80%; 
         max-width: 500px;
         height: 80px;
         font-size: 24px;
@@ -95,8 +100,8 @@ st.markdown("""
         color: white;
         box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         transition: all 0.3s ease;
-        margin: 0 auto;
     }
+    
     .stButton button:hover {
         background: linear-gradient(45deg, #2a5298, #1e3c72);
         color: #FFD700;
@@ -107,10 +112,12 @@ st.markdown("""
     .char-title {
         font-size: 42px;
         font-weight: 800;
-        margin-top: 10px;
+        margin-top: 20px;
         margin-bottom: 5px;
         text-shadow: 3px 3px 0px #000000;
         letter-spacing: 1px;
+        text-align: center;
+        display: block;
     }
     .char-quote {
         font-size: 18px;
@@ -118,9 +125,10 @@ st.markdown("""
         margin-bottom: 25px;
         color: #dddddd;
         opacity: 0.8;
+        text-align: center;
+        display: block;
     }
     
-    /* Skrytie defaultného menu vpravo hore (voliteľné) */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
 </style>
@@ -138,17 +146,16 @@ if 'chosen_char' not in st.session_state:
     st.session_state.chosen_char = None
 
 # --- TLAČIDLO "SPIN" ---
+# Tlačidlo je tu stále. Keď naň klikneš, pregeneruje sa výber.
 if st.button("🌀 CHOOSE YOUR PATH 🌀"):
     # Efekt čakania
-    placeholder = st.empty()
-    
     with st.spinner("Pripájam sa k Dračiemu Bohu..."):
-        time.sleep(1.0)
+        time.sleep(0.8)
     
     with st.spinner("Osud vyberá tvoju cestu..."):
-        time.sleep(1.2)
+        time.sleep(1.0)
         
-    # Výber
+    # Výber novej postavy
     chosen_name = random.choice(list(CHARACTERS.keys()))
     st.session_state.chosen_char = chosen_name
 
@@ -159,25 +166,14 @@ if st.session_state.chosen_char:
     
     st.divider()
     
-    # 1. Nadpis
+    # 1. Nadpis (Centrovaný cez CSS triedu char-title)
     st.markdown(f'<div class="char-title" style="color: {char_data["color"]};">{char_name}</div>', unsafe_allow_html=True)
     
-    # 2. Hláška
+    # 2. Hláška (Centrovaná cez CSS triedu char-quote)
     st.markdown(f'<div class="char-quote">"{char_data["quote"]}"</div>', unsafe_allow_html=True)
     
-    # 3. Obrázok (Bezpečné zobrazenie)
+    # 3. Obrázok (Centrovaný cez CSS pravidlo pre stImage)
     if os.path.exists(char_data["img"]):
         st.image(char_data["img"])
     else:
         st.warning(f"⚠️ Chýba obrázok: `{char_data['img']}`")
-
-    st.write("")
-    st.write("")
-    
-    if st.button("Skúsiť osud znova? 🔄", type="secondary"):
-        st.session_state.chosen_char = None
-        st.rerun()
-
-# --- PÄTIČKA ---
-st.divider()
-st.caption("Metin2 Destiny Chooser")
