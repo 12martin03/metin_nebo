@@ -87,8 +87,8 @@ CHARACTERS = {
 }
 
 # --- APLIKOVANIE POZADIA ---
-# Skúsi načítať background.jpg, ak existuje
-background_file = "background.jpg" 
+# Skúsi načítať background.png, ak existuje
+background_file = "background.png" 
 if os.path.exists(background_file):
     set_background(background_file)
 else:
