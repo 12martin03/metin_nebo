@@ -81,19 +81,10 @@ st.markdown("""
         filter: drop-shadow(0px 0px 15px rgba(0,0,0,0.6));
     }
 
-    /* 3. TLAČIDLO NA CELÚ ŠÍRKU */
-    div.stButton {
-        display: flex;
-        justify-content: center; 
-        align-items: center;
-        width: 100%;
-    }
-
-    div.stButton > button {
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        width: 100% !important; /* ZMENA: 100% šírka */
+    /* 3. TLAČIDLO NA CELÚ ŠÍRKU - GENERÁLNA OPRAVA */
+    /* Zameriame sa na všetky tlačidlá v aplikácii */
+    .stButton button {
+        width: 100% !important; /* Vynútiť 100% šírku */
         height: 80px;
         font-size: 24px;
         font-weight: bold;
@@ -103,12 +94,13 @@ st.markdown("""
         color: white;
         box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         transition: transform 0.2s;
+        display: block !important;
     }
     
-    div.stButton > button:hover {
+    .stButton button:hover {
         background: linear-gradient(45deg, #2a5298, #1e3c72);
         color: #FFD700;
-        transform: scale(1.02); /* Jemnejšie zväčšenie pri plnej šírke */
+        transform: scale(1.02);
     }
     
     /* 4. Typografia pre výsledok */
@@ -119,7 +111,6 @@ st.markdown("""
         text-shadow: 3px 3px 0px #000000;
         letter-spacing: 1px;
         text-align: center;
-        /* Pridáme animáciu pre objavenie textu */
         animation: fadeIn 1s;
     }
     .char-quote {
@@ -155,7 +146,8 @@ if 'chosen_char' not in st.session_state:
     st.session_state.chosen_char = None
 
 # --- TLAČIDLO "SPIN" ---
-if st.button("🌀 CHOOSE YOUR PATH 🌀"):
+# DÔLEŽITÉ: use_container_width=True roztiahne tlačidlo natívne cez Python
+if st.button("🌀 CHOOSE YOUR PATH 🌀", use_container_width=True):
     with st.spinner("Pripájam sa k Dračiemu Bohu..."):
         time.sleep(0.8)
     
@@ -172,16 +164,13 @@ if st.session_state.chosen_char:
     
     st.divider()
     
-    # 1. OBRÁZOK (Zobrazí sa prvý)
+    # 1. OBRÁZOK
     if os.path.exists(char_data["img"]):
         st.image(char_data["img"])
     else:
         st.warning(f"⚠️ Chýba obrázok: `{char_data['img']}`")
     
-    # --- HERE IS THE TRICK ---
-    # Krátky delay, kým sa načíta text. 
-    # Tým pádom používateľ najprv vidí obrázok, mozog ho spracuje,
-    # a až potom "naskočí" text pod ním.
+    # Delay pre efekt
     time.sleep(0.5) 
     
     # 2. TEXT (S oneskorením)
