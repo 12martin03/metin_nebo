@@ -138,7 +138,7 @@ st.markdown("""
 
 # Tvoje nové nadpisy
 st.title("Nebo vol. 4")
-st.subheader("30.1.-1.2.2026") # Dal som to ako subheader, vyzerá to lepšie pod hlavným
+st.subheader("❤️ 30.1.-1.2.2026 ❤️") # Dal som to ako subheader, vyzerá to lepšie pod hlavným
 st.write("Daj si za jeden na zdravie.")
 
 st.divider()
