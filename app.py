@@ -136,8 +136,8 @@ st.markdown("""
 
 # --- HLAVNÁ APLIKÁCIA ---
 
-st.title("⚔️ Nový Server: Volanie Osudu")
-st.write("Nevieš sa rozhodnúť? Nechaj server, nech vyberie za teba.")
+st.title("Nebo vol. 4: 30.1.-1.2.2026")
+st.write("Daj si za jeden na zdravie. Potom klikni na toto tlačidlo a zisti, čo budeš hrať najbližšie dni.")
 
 st.divider()
 st.write("") 
@@ -179,4 +179,4 @@ if st.session_state.chosen_char:
 
 # --- PÄTIČKA ---
 st.divider()
-st.caption("Metin2 Destiny Chooser")
+st.caption("Tvoj tatko records")
