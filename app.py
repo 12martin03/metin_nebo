@@ -5,12 +5,13 @@ import os
 
 # --- NASTAVENIE STRÁNKY ---
 st.set_page_config(
-    page_title="Metin2: New Server Destiny",
+    page_title="Nebo vol. 4",
     page_icon="⚔️",
     layout="centered"
 )
 
 # --- DATA CHARAKTEROV (PNG) ---
+# Tvoje upravené názvy a hlášky
 CHARACTERS = {
     "War - aurák": {
         "img": "war_body.png",
@@ -81,10 +82,9 @@ st.markdown("""
         filter: drop-shadow(0px 0px 15px rgba(0,0,0,0.6));
     }
 
-    /* 3. TLAČIDLO NA CELÚ ŠÍRKU - GENERÁLNA OPRAVA */
-    /* Zameriame sa na všetky tlačidlá v aplikácii */
+    /* 3. TLAČIDLO NA CELÚ ŠÍRKU */
     .stButton button {
-        width: 100% !important; /* Vynútiť 100% šírku */
+        width: 100% !important;
         height: 80px;
         font-size: 24px;
         font-weight: bold;
@@ -136,8 +136,9 @@ st.markdown("""
 
 # --- HLAVNÁ APLIKÁCIA ---
 
+# Tvoje nové nadpisy
 st.title("Nebo vol. 4")
-st.title("30.1.-1.2.2026")
+st.subheader("30.1.-1.2.2026") # Dal som to ako subheader, vyzerá to lepšie pod hlavným
 st.write("Daj si za jeden na zdravie.")
 
 st.divider()
@@ -147,7 +148,7 @@ if 'chosen_char' not in st.session_state:
     st.session_state.chosen_char = None
 
 # --- TLAČIDLO "SPIN" ---
-# DÔLEŽITÉ: use_container_width=True roztiahne tlačidlo natívne cez Python
+# Tvoj nový text na tlačidle
 if st.button("🌀 Takže čo mám hrať?! 🌀", use_container_width=True):
     with st.spinner("Pripájam sa k Dračiemu Bohu..."):
         time.sleep(0.8)
@@ -161,22 +162,30 @@ if st.button("🌀 Takže čo mám hrať?! 🌀", use_container_width=True):
 # --- ZOBRAZENIE VÝSLEDKU ---
 if st.session_state.chosen_char:
     char_name = st.session_state.chosen_char
-    char_data = CHARACTERS[char_name]
     
-    st.divider()
+    # BEZPEČNOSTNÁ POISTKA (Aby to nespadlo na KeyError pri zmene názvov)
+    if char_name in CHARACTERS:
+        char_data = CHARACTERS[char_name]
+        
+        st.divider()
+        
+        # 1. OBRÁZOK
+        if os.path.exists(char_data["img"]):
+            st.image(char_data["img"])
+        else:
+            st.warning(f"⚠️ Chýba obrázok: `{char_data['img']}`")
+        
+        # Delay pre efekt
+        time.sleep(0.5) 
+        
+        # 2. TEXT (S oneskorením)
+        st.markdown(f'<div class="char-title" style="color: {char_data["color"]};">{char_name}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="char-quote">"{char_data["quote"]}"</div>', unsafe_allow_html=True)
     
-    # 1. OBRÁZOK
-    if os.path.exists(char_data["img"]):
-        st.image(char_data["img"])
     else:
-        st.warning(f"⚠️ Chýba obrázok: `{char_data['img']}`")
-    
-    # Delay pre efekt
-    time.sleep(0.5) 
-    
-    # 2. TEXT (S oneskorením)
-    st.markdown(f'<div class="char-title" style="color: {char_data["color"]};">{char_name}</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="char-quote">"{char_data["quote"]}"</div>', unsafe_allow_html=True)
+        # Ak by v pamäti ostal starý názov (napr. Warrior - Telo), resetuje sa to
+        st.session_state.chosen_char = None
+        st.rerun()
 
 # --- PÄTIČKA ---
 st.divider()
