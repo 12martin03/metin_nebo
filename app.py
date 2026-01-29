@@ -10,8 +10,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- DATA CHARAKTEROV (Teraz s .png) ---
-# Uisti sa, že tvoje obrázky majú tieto názvy a sú vo formáte PNG s priehľadným pozadím
+# --- DATA CHARAKTEROV (PNG) ---
 CHARACTERS = {
     "Warrior - Telo (Body)": {
         "img": "war_body.png",
@@ -55,12 +54,38 @@ CHARACTERS = {
     }
 }
 
-# --- CSS ŠTÝLY ---
+# --- CSS ŠTÝLY (Centering Magic) ---
 st.markdown("""
 <style>
-    /* Štýl tlačidla */
+    /* 1. Vycentrovanie všetkých textov a nadpisov */
+    .block-container {
+        text-align: center;
+    }
+    h1, h2, h3, p {
+        text-align: center !important;
+    }
+    
+    /* 2. Vycentrovanie obrázkov (Streamlit ich rád dáva doľava) */
+    [data-testid="stImage"] {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    img {
+        margin: 0 auto;
+        max-height: 600px;
+        object-fit: contain;
+        filter: drop-shadow(0px 0px 15px rgba(0,0,0,0.6));
+    }
+
+    /* 3. Štýl tlačidla */
+    .stButton {
+        display: flex;
+        justify-content: center;
+    }
     .stButton button {
-        width: 100%;
+        width: 80%; /* Tlačidlo nebude úplne roztiahnuté, ale pekné v strede */
+        max-width: 500px;
         height: 80px;
         font-size: 24px;
         font-weight: bold;
@@ -70,6 +95,7 @@ st.markdown("""
         color: white;
         box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         transition: all 0.3s ease;
+        margin: 0 auto;
     }
     .stButton button:hover {
         background: linear-gradient(45deg, #2a5298, #1e3c72);
@@ -77,19 +103,16 @@ st.markdown("""
         transform: scale(1.02);
     }
     
-    /* Nadpis postavy */
+    /* 4. Nadpis postavy a hláška */
     .char-title {
-        text-align: center;
         font-size: 42px;
         font-weight: 800;
+        margin-top: 10px;
         margin-bottom: 5px;
         text-shadow: 3px 3px 0px #000000;
         letter-spacing: 1px;
     }
-    
-    /* Hláška */
     .char-quote {
-        text-align: center;
         font-size: 18px;
         font-style: italic;
         margin-bottom: 25px;
@@ -97,16 +120,9 @@ st.markdown("""
         opacity: 0.8;
     }
     
-    /* Obrázok (Karta) */
-    img {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        max-height: 550px; /* Aby sa to zmestilo na obrazovku */
-        object-fit: contain;
-        /* Odstránil som box-shadow, aby PNG vyzeralo čisto */
-        filter: drop-shadow(0px 0px 10px rgba(0,0,0,0.5)); /* Toto spraví tieň len okolo postavy, nie štvorca! */
-    }
+    /* Skrytie defaultného menu vpravo hore (voliteľné) */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -124,7 +140,7 @@ if 'chosen_char' not in st.session_state:
 # --- TLAČIDLO "SPIN" ---
 if st.button("🌀 CHOOSE YOUR PATH 🌀"):
     # Efekt čakania
-    placeholder = st.empty() # Prázdne miesto pre texty
+    placeholder = st.empty()
     
     with st.spinner("Pripájam sa k Dračiemu Bohu..."):
         time.sleep(1.0)
@@ -149,11 +165,11 @@ if st.session_state.chosen_char:
     # 2. Hláška
     st.markdown(f'<div class="char-quote">"{char_data["quote"]}"</div>', unsafe_allow_html=True)
     
-    # 3. Obrázok
+    # 3. Obrázok (Bezpečné zobrazenie)
     if os.path.exists(char_data["img"]):
         st.image(char_data["img"])
     else:
-        st.warning(f"⚠️ Chýba obrázok: `{char_data['img']}`. Nahraj ho do zložky (PNG format).")
+        st.warning(f"⚠️ Chýba obrázok: `{char_data['img']}`")
 
     st.write("")
     st.write("")
