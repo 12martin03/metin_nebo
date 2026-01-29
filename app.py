@@ -12,42 +12,42 @@ st.set_page_config(
 
 # --- DATA CHARAKTEROV (PNG) ---
 CHARACTERS = {
-    "Warrior - Telo (Body)": {
+    "War - aurák": {
         "img": "war_body.png",
         "color": "#FF4B4B", 
         "quote": "Nezastaviteľná sila. Rozrazíš línie nepriateľa!"
     },
-    "Warrior - Mentál (Mental)": {
+    "War - mentál": {
         "img": "war_mental.png",
         "color": "#A52A2A", 
         "quote": "Neprekonateľná stena. Tvoje telo je z ocele."
     },
-    "Šaman - Drak (Dragon)": {
+    "Šaman - Drak": {
         "img": "shaman_dragon.png",
         "color": "#FFD700", 
         "quote": "Oheň a buffy. Srdce každej dobrej party."
     },
-    "Šaman - Heal (Liečenie)": {
+    "Šaman - Heal": {
         "img": "shaman_heal.png",
         "color": "#00CED1", 
-        "quote": "Život a rýchlosť. Udržíš spojencov na nohách."
+        "quote": "Život a rýchlosť. Udržíš seba a spojencov na nohách."
     },
-    "Sura - WP (Weapon)": {
+    "Sura - WP": {
         "img": "sura_wp.png",
         "color": "#4B0082", 
-        "quote": "Čepeľ a mágia. Najlepší PvE stroj na serveri."
+        "quote": "Čepeľ a mágia. Najlepší PvM stroj na serveri."
     },
-    "Sura - BM (Black Magic)": {
+    "Sura - BM": {
         "img": "sura_bm.png",
         "color": "#800080", 
-        "quote": "Temné umenie. V PvP sa ťa budú báť."
+        "quote": "Temné umenie. Budú sa ťa báť."
     },
-    "Ninja - Dagger (Dýka)": {
+    "Ninja - Dagger": {
         "img": "ninja_dagger.png",
         "color": "#2E8B57", 
         "quote": "Rýchlosť a stealth. Smrtiace kombá z tieňov."
     },
-    "Ninja - Arch (Luk)": {
+    "Ninja - Archer": {
         "img": "ninja_arch.png",
         "color": "#FFA500", 
         "quote": "Smrť z diaľky. Nikto ti neutečie."
