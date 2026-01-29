@@ -71,8 +71,8 @@ st.markdown("""
         justify-content: center;
         align-items: center;
         width: 100%;
-        margin-top: 30px;    /* Medzera nad obrázkom */
-        margin-bottom: 20px; /* Medzera pod obrázkom */
+        margin-top: 30px;    
+        margin-bottom: 20px; 
     }
     
     div[data-testid="stImage"] > img {
@@ -81,22 +81,19 @@ st.markdown("""
         filter: drop-shadow(0px 0px 15px rgba(0,0,0,0.6));
     }
 
-    /* 3. AGRESÍVNE CENTROVANIE TLAČIDLA */
-    /* Toto hovorí kontajneru tlačidla: zarovnaj svoj obsah na stred */
+    /* 3. TLAČIDLO NA CELÚ ŠÍRKU */
     div.stButton {
         display: flex;
-        justify-content: center; /* Horizontálny stred */
+        justify-content: center; 
         align-items: center;
         width: 100%;
     }
 
-    /* Samotné tlačidlo */
     div.stButton > button {
         display: inline-flex;
         justify-content: center;
         align-items: center;
-        width: 60% !important; /* Šírka tlačidla */
-        min-width: 300px;      /* Aby nebolo príliš úzke na mobile */
+        width: 100% !important; /* ZMENA: 100% šírka */
         height: 80px;
         font-size: 24px;
         font-weight: bold;
@@ -111,7 +108,7 @@ st.markdown("""
     div.stButton > button:hover {
         background: linear-gradient(45deg, #2a5298, #1e3c72);
         color: #FFD700;
-        transform: scale(1.05);
+        transform: scale(1.02); /* Jemnejšie zväčšenie pri plnej šírke */
     }
     
     /* 4. Typografia pre výsledok */
@@ -122,6 +119,8 @@ st.markdown("""
         text-shadow: 3px 3px 0px #000000;
         letter-spacing: 1px;
         text-align: center;
+        /* Pridáme animáciu pre objavenie textu */
+        animation: fadeIn 1s;
     }
     .char-quote {
         font-size: 18px;
@@ -131,9 +130,14 @@ st.markdown("""
         color: #dddddd;
         opacity: 0.8;
         text-align: center;
+        animation: fadeIn 1.5s;
+    }
+
+    @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
     }
     
-    /* Skrytie menu */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
 </style>
@@ -151,7 +155,6 @@ if 'chosen_char' not in st.session_state:
     st.session_state.chosen_char = None
 
 # --- TLAČIDLO "SPIN" ---
-# Žiadne columns! CSS (div.stButton {justify-content: center}) sa postará o vycentrovanie.
 if st.button("🌀 CHOOSE YOUR PATH 🌀"):
     with st.spinner("Pripájam sa k Dračiemu Bohu..."):
         time.sleep(0.8)
@@ -169,15 +172,19 @@ if st.session_state.chosen_char:
     
     st.divider()
     
-    # --- PORADIE PRVKOV (OPRAVENÉ) ---
-    
-    # 1. OBRÁZOK JE TERAZ PRVÝ
+    # 1. OBRÁZOK (Zobrazí sa prvý)
     if os.path.exists(char_data["img"]):
         st.image(char_data["img"])
     else:
         st.warning(f"⚠️ Chýba obrázok: `{char_data['img']}`")
     
-    # 2. POTOM NASLEDUJE TEXT
+    # --- HERE IS THE TRICK ---
+    # Krátky delay, kým sa načíta text. 
+    # Tým pádom používateľ najprv vidí obrázok, mozog ho spracuje,
+    # a až potom "naskočí" text pod ním.
+    time.sleep(0.5) 
+    
+    # 2. TEXT (S oneskorením)
     st.markdown(f'<div class="char-title" style="color: {char_data["color"]};">{char_name}</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="char-quote">"{char_data["quote"]}"</div>', unsafe_allow_html=True)
 
