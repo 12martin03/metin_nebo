@@ -28,13 +28,25 @@ def set_background(png_file):
         background-attachment: fixed;
     }}
     
-    /* Adaptívny box: v svetlom režime biely, v tmavom tmavý */
+    /* HLAVNÝ KONTAJNER - EFEKT MLIEČNEHO SKLA */
     .block-container {{
-        background-color: var(--background-color);
-        opacity: 0.9; /* Jemná priehľadnosť, aby bolo vidno fotku */
+        /* Svetlý režim (predvolený) */
+        background-color: rgba(255, 255, 255, 0.8) !important;
+        backdrop-filter: blur(12px); /* Rozmaže fotku pod boxom */
+        -webkit-backdrop-filter: blur(12px);
         border-radius: 20px;
         padding: 3rem;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        margin-top: 50px;
+    }}
+
+    /* Úprava pre tmavý režim */
+    @media (prefers-color-scheme: dark) {{
+        .block-container {{
+            background-color: rgba(20, 20, 25, 0.8) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }}
     }}
     </style>
     '''
@@ -57,62 +69,58 @@ background_file = "background.png"
 if os.path.exists(background_file):
     set_background(background_file)
 
-# --- CSS ŠTÝLY (Adaptívne) ---
+# --- CSS ŠTÝLY ---
 st.markdown("""
 <style>
     .block-container {
         text-align: center;
     }
-    h1, h2, h3, p {
+    
+    /* Dynamická farba textu podľa témy */
+    h1, h2, h3, p, span, .stMarkdown {
         text-align: center !important;
-        /* Použije automatickú farbu textu podľa témy Streamlitu */
         color: var(--text-color) !important;
     }
     
     div[data-testid="stImage"] {
         display: flex;
         justify-content: center;
-        width: 100%;
-        margin-top: 30px;    
-        margin-bottom: 20px; 
+        margin-top: 20px;
     }
     
     div[data-testid="stImage"] > img {
-        max-height: 650px;
+        max-height: 600px;
         object-fit: contain;
-        filter: drop-shadow(0px 0px 15px rgba(0,0,0,0.6));
+        filter: drop-shadow(0px 0px 15px rgba(0,0,0,0.5));
     }
 
+    /* Tlačidlo */
     .stButton button {
         width: 100% !important;
-        height: 80px;
-        font-size: 24px;
+        height: 70px;
+        font-size: 22px;
         font-weight: bold;
         border-radius: 12px;
         background: linear-gradient(45deg, #1e3c72, #2a5298);
         border: none;
-        color: white !important; /* Tlačidlo ostane modré s bielym písmom vždy */
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        transition: transform 0.2s;
+        color: white !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     }
     
     .char-title {
-        font-size: 42px;
-        font-weight: 800;
-        margin-top: 10px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        letter-spacing: 1px;
+        font-size: 40px;
+        font-weight: 850;
+        margin-top: 15px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
         text-align: center;
     }
     
     .char-quote {
-        font-size: 18px;
+        font-size: 19px;
         font-style: italic;
         margin-top: 10px;
-        margin-bottom: 50px;
-        /* Odstránená natvrdo nastavená tmavá farba */
-        color: var(--text-color); 
-        opacity: 0.8;
+        margin-bottom: 40px;
+        opacity: 0.9;
         text-align: center;
     }
 
@@ -134,8 +142,7 @@ if 'chosen_char' not in st.session_state:
 if st.button("🌀 Takže čo mám hrať?! 🌀", use_container_width=True):
     with st.spinner("Pripájam sa k Dračiemu Bohu..."):
         time.sleep(0.8)
-    chosen_name = random.choice(list(CHARACTERS.keys()))
-    st.session_state.chosen_char = chosen_name
+    st.session_state.chosen_char = random.choice(list(CHARACTERS.keys()))
 
 if st.session_state.chosen_char:
     char_name = st.session_state.chosen_char
@@ -145,6 +152,7 @@ if st.session_state.chosen_char:
         if os.path.exists(char_data["img"]):
             st.image(char_data["img"])
         
+        time.sleep(0.4)
         st.markdown(f'<div class="char-title" style="color: {char_data["color"]};">{char_name}</div>', unsafe_allow_html=True)
         st.markdown(f'<div class="char-quote">"{char_data["quote"]}"</div>', unsafe_allow_html=True)
 
